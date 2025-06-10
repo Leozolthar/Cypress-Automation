@@ -145,7 +145,6 @@ beforeEach(() => {
 
   it('Filling the Contact Us form', () => {
 
-
     cy.contains('Contact us').click();
     cy.url().should('include', '/contact_us')
     cy.contains('Get In Touch').should('be.visible')
@@ -169,6 +168,33 @@ beforeEach(() => {
     cy.get('input[data-qa="submit-button"]').click()
 
     cy.contains('Success! Your details have been submitted successfully.').should('be.visible')
+
+  })
+
+  it('Verify the Test Cases page', () => {
+
+    cy.contains('Test Cases').click()
+    cy.url().should('include', '/test_cases')
+
+  })
+
+
+  it.only('Verify Products and Product detail page', () => {
+
+    cy.contains('Products').click()
+    cy.url().should('include', '/products')
+    cy.contains('All Products').should('be.visible')
+    cy.contains('Category').should('be.visible')
+    cy.contains('Brands').should('be.visible')
+
+    cy.get('.features_items').should('be.visible') //indicates that the class for the products container is visible
+
+    cy.get('.features_items .col-sm-4').first().contains('View Product').click();
+    cy.contains('Blue Top').should('be.visible')
+    cy.contains('Availability: In Stock').should('be.visible')
+    cy.contains('Condition: New').should('be.visible')
+    cy.contains('Brand: Polo').should('be.visible')
+
 
   })
 
