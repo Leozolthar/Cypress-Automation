@@ -179,7 +179,7 @@ beforeEach(() => {
   })
 
 
-  it.only('Verify Products and Product detail page', () => {
+  it('Verify Products and Product detail page', () => {
 
     cy.contains('Products').click()
     cy.url().should('include', '/products')
@@ -195,8 +195,34 @@ beforeEach(() => {
     cy.contains('Condition: New').should('be.visible')
     cy.contains('Brand: Polo').should('be.visible')
 
+  })
+
+
+  it('Search a Product', () => { //in this case we will use the 'Premium Polo T-Shirts'
+
+
+    cy.contains('Products').click()
+    cy.url().should('include', '/products')
+    cy.get('#search_product').should('have.attr', 'placeholder', 'Search Product')
+    cy.get('#search_product').type('Premium Polo T-Shirts')
+    cy.get('#submit_search').click()
+    cy.get('#search_product').clear()
+    cy.contains('Premium Polo T-Shirts').should('be.visible')
+    cy.contains('Rs. 1500').should('be.visible')
 
   })
 
+  it.only('Send a subscription at home page', () => {
+
+    cy.scrollTo('bottom')
+    cy.contains('Subscription').should('be.visible')
+    cy.get('#susbscribe_email').should('have.attr', 'placeholder', 'Your email address')
+    cy.contains('Get the most recent updates from our site and be updated your self...').should('be.visible')
+    cy.get('#susbscribe_email').type(email)
+    cy.get('#subscribe').click()
+    cy.contains('You have been successfully subscribed!').should('be.visible')
+
+
+  })
 
 })
