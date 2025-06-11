@@ -212,7 +212,7 @@ beforeEach(() => {
 
   })
 
-  it.only('Send a subscription at home page', () => {
+  it('Send a subscription at home page', () => {
 
     cy.scrollTo('bottom')
     cy.contains('Subscription').should('be.visible')
@@ -222,7 +222,22 @@ beforeEach(() => {
     cy.get('#subscribe').click()
     cy.contains('You have been successfully subscribed!').should('be.visible')
 
+  })
+
+  it('Send a subscription at Cart page', () => {
+
+  cy.contains('Cart').click()
+  cy.url().should('include', '/view_cart')
+  cy.get('#susbscribe_email').should('have.attr', 'placeholder', 'Your email address')
+  cy.contains('Get the most recent updates from our site and be updated your self...').should('be.visible')
+  cy.get('#susbscribe_email').type(email)
+  cy.get('#subscribe').click()
+  cy.contains('You have been successfully subscribed!').should('be.visible')
 
   })
+
+
+
+
 
 })
