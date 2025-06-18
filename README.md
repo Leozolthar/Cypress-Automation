@@ -2,7 +2,7 @@
 
 This project contains end-to-end automated tests using [Cypress](https://www.cypress.io/), integrated with [GitHub Actions](https://docs.github.com/actions) to automatically run tests on each push via Continuous Integration (CI).
 
--
+--
 
 📋 About the Project
 
@@ -10,7 +10,7 @@ The main goal of this repository is to demonstrate how to use Cypress for E2E te
 
 Whenever new code is pushed to the repository, the test suite runs automatically through GitHub Actions.
 
--
+--
 
 🧪 Technologies Used
 
@@ -19,7 +19,7 @@ Whenever new code is pushed to the repository, the test suite runs automatically
 - [GitHub Actions]
 - [cypress-file-upload]
 
--
+--
 
 ▶️ Running the Tests Locally
 
@@ -35,7 +35,7 @@ Whenever new code is pushed to the repository, the test suite runs automatically
 4. Run the tests:
   [npx cypress open  OR   npx cypress run]
 
--
+--
 
 ⚙️ GitHub Actions
 Tests run automatically on every push or pull request using GitHub Actions.
