@@ -1,10 +1,10 @@
-🚀 Cypress E2E Automation
+##🚀 **Cypress E2E Automation**
 
 This project contains end-to-end automated tests using [Cypress](https://www.cypress.io/), integrated with [GitHub Actions](https://docs.github.com/actions) to automatically run tests on each push via Continuous Integration (CI).
 
 --
 
-📋 About the Project
+#📋 **About the Project**
 
 The main goal of this repository is to demonstrate how to use Cypress for E2E test automation and how to integrate it with GitHub Actions to create a basic CI pipeline.
 
@@ -12,7 +12,7 @@ Whenever new code is pushed to the repository, the test suite runs automatically
 
 --
 
-🧪 Technologies Used
+#🧪 **Technologies Used**
 
 - [Cypress]
 - [JavaScript]
@@ -21,7 +21,7 @@ Whenever new code is pushed to the repository, the test suite runs automatically
 
 --
 
-▶️ Running the Tests Locally
+#▶️ **Running the Tests Locally**
 
 1. Clone the repository:
    [git clone https://github.com/Leozolthar/Cypress-Automation.git]
@@ -37,7 +37,7 @@ Whenever new code is pushed to the repository, the test suite runs automatically
 
 --
 
-⚙️ GitHub Actions
+#⚙️ **GitHub Actions**
 Tests run automatically on every push or pull request using GitHub Actions.
 The configuration is defined in the workflow file:
   .github/workflows/cypress.yml
