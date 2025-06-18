@@ -195,7 +195,7 @@ beforeEach(() => {
 
     cy.get('.features_items').should('be.visible') //indicates that the class for the products container is visible
 
-    cy.get('.features_items .col-sm-4').first().contains('View Product').click();
+    cy.get('.features_items .col-sm-4').first().contains('View Product').click()
     cy.contains('Blue Top').should('be.visible')
     cy.contains('Availability: In Stock').should('be.visible')
     cy.contains('Condition: New').should('be.visible')
@@ -735,7 +735,298 @@ beforeEach(() => {
 
   })
 
+  it('Verify Cart after login', () => {
 
+    cy.get('a[href="/products"]').click()
+    cy.url().should('include', '/products')
+    cy.get('#search_product').type('Blue Top')
+    cy.get('#submit_search').click()
+    cy.contains('Searched Products').should('be.visible')
+    cy.get('.features_items').should('have.length', 1) //checking if only 1 product is being displayed
+
+    cy.get('.features_items .product-image-wrapper').eq(0).trigger('mouseover')
+    cy.get('a[data-product-id="1"]').first().click()
+    cy.get('.modal-content').should('be.visible')
+    cy.contains('Added!').should('be.visible')
+    cy.contains('Your product has been added to cart.').should('be.visible')
+    cy.contains('View Cart').click()
+    cy.url().should('include', '/view_cart')
+
+    cy.get('a[href="/login"]').first().click()
+    cy.get('[data-qa="login-email"]').type('zolthar_test@test.com')
+    cy.get('[data-qa="login-password"]').type('zolthar1234')
+    cy.get('[data-qa="login-button"]').click()
+    cy.contains('Logged in as zolthar_test').should('be.visible')
+
+    cy.contains('Cart').click()
+    cy.get('.cart_quantity').should('have.length', 1)
+    cy.contains('Blue Top').should('be.visible')
+    cy.get('.cart_quantity_delete').click()
+    cy.get('#empty_cart').should('be.visible')
+    cy.get('#empty_cart').should('contain.text', 'Cart is empty! Click here to buy products.')
+
+    cy.contains('Logout').click()
+    cy.location('pathname').should('eq', '/login')
+
+  })
+
+  it('Adding a review on Product', () => {
+
+    cy.get('a[href="/products"]').click()
+    cy.url().should('include', '/products')
+    cy.get('#search_product').type('Blue Top')
+    cy.get('#submit_search').click()
+    cy.contains('Searched Products').should('be.visible')
+    cy.get('.features_items').should('have.length', 1)
+    cy.get('.features_items .col-sm-4').first().contains('View Product').click()
+
+    cy.get('#name').should('have.attr', 'placeholder', 'Your Name')
+    cy.get('#name').type(name)
+    cy.get('#email').should('have.attr', 'placeholder', 'Email Address')
+    cy.get('#email').type(email)
+    cy.get('#review').should('have.attr', 'placeholder', 'Add Review Here!')
+    cy.get('#review').type('Hello how u doing')
+    cy.get('#button-review').click()
+    cy.contains('Thank you for your review.')
+  })
+
+  it('Add a product to cart from Recommended items', () => {
+
+    cy.get('.recommended_items').scrollIntoView()    
+    cy.get('.recommended_items').should('be.visible')
+    cy.get('.recommended_items .add-to-cart').first().click({ force: true })
+    cy.contains('Added!').should('be.visible')
+    cy.contains('Your product has been added to cart.').should('be.visible')
+    cy.contains('View Cart').click()
+    cy.url().should('include', '/view_cart')
+    cy.get('.cart_quantity').should('have.length', 1)
+
+  })
+
+  it('Checking address details in checkout page', () => {
+
+    cy.contains('Signup / Login').click()
+    cy.location('pathname').should('eq', '/login') //verify if the URL's final changed to /login
+    cy.contains('New User Signup!').should('be.visible')  
+    cy.get('[data-qa="signup-name"]').type(name)
+    cy.get('[data-qa="signup-email"]').type(email)
+    cy.get('[data-qa="signup-button"]').click()
+    cy.title().should('contain', 'Automation Exercise - Signup')
+    cy.location('pathname').should('eq', '/signup') //verify if the URL's final changed to   /signup
+
+    cy.contains('Enter Account Information').should('be.visible')
+    cy.get('#name').should('have.value', name)
+    cy.get('#email').should('have.value', email)
+
+    cy.get('#id_gender2').check()
+        cy.get('#id_gender2').should('be.checked')
+    cy.get('#id_gender1').check()
+        cy.get('#id_gender1').should('be.checked')
+
+    cy.get('#password').type(password).should('have.value', password).and('have.attr', 'type', 'password') //validates if the password is hidden, not displaying its value
+
+    cy.get('#days').select('20')
+        cy.get('#days').should('have.value', '20')
+    cy.get('#months').select('11')
+        cy.get('#months').should('have.value', '11')
+    cy.get('#years').select('1996')
+        cy.get('#years').should('have.value', '1996')
+
+     
+    cy.get('#newsletter').check().should('be.checked')   
+    cy.get('#optin').check().should('be.checked')
+
+    cy.get('#first_name').type('firstname')
+        .should('have.value', 'firstname')
+    cy.get('#last_name').type('lastname')
+        .should('have.value', 'lastname')
+    cy.get('#company').type('testcompany')
+        .should('have.value', 'testcompany')
+    cy.get('#address1').type('testadress1')
+        .should('have.value', 'testadress1')
+    cy.get('#address2').type('testadress2')
+        .should('have.value', 'testadress2')
+
+    cy.get('#country').select('Canada')
+        .should('have.value', 'Canada')
+    
+    cy.get('#state').type('teststate')
+        .should('have.value', 'teststate')
+    cy.get('#city').type('testcity')
+        .should('have.value', 'testcity')
+    cy.get('#zipcode').type('102030')
+        .should('have.value', '102030')
+    cy.get('#mobile_number').type('40028922')
+        .should('have.value', '40028922')
+
+    cy.get('[data-qa="create-account"]').click()
+    cy.location('pathname').should('eq', '/account_created') //verify if the URL's final changed to /account_created
+
+    cy.contains('Account Created!').should('be.visible')
+    cy.contains('Congratulations! Your new account has been successfully created!').should('be.visible')
+    cy.contains('You can now take advantage of member privileges to enhance your online shopping experience with us.').should('be.visible')
+    cy.get('[data-qa="continue-button"]').click()
+    
+    cy.contains(`Logged in as ${name}`).should('be.visible')
+
+    cy.contains('Products').click()
+    cy.url().should('include', '/products')
+    cy.get('.features_items').should('be.visible')
+
+    cy.get('.features_items .product-image-wrapper').eq(0).trigger('mouseover')
+    cy.get('a[data-product-id="1"]').first().click()
+    cy.get('.modal-content').should('be.visible')
+    cy.contains('Added!').should('be.visible')
+    cy.contains('Your product has been added to cart.').should('be.visible')
+
+    cy.contains('View Cart').click()
+    cy.url().should('include', '/view_cart')
+    
+    cy.contains('Proceed To Checkout').click()
+    cy.url().should('include', '/checkout')
+
+    cy.get('.address_address1.address_address2').should('be.visible').should('contain.text', 'testadress1')
+
+    cy.contains('Delete Account').click()
+    cy.location('pathname').should('eq', '/delete_account')
+    cy.contains('Account Deleted!').should('be.visible')
+    cy.contains('Your account has been permanently deleted!').should('be.visible')
+    cy.contains('You can create new account to take advantage of member privileges to enhance your online shopping experience with us.').should('be.visible')
+
+  })
+
+  it('Verify Invoice file after urchase order', () => {
+
+cy.get('.features_items .product-image-wrapper').eq(0).trigger('mouseover')
+  cy.contains('Add to cart').eq(0).click()
+  cy.get('.modal-content').should('be.visible')
+  cy.contains('Added!').should('be.visible')
+  cy.contains('Your product has been added to cart.').should('be.visible')
+  cy.contains('View Cart').click()
+  cy.url().should('include', '/view_cart')
+  cy.get('.btn.btn-default.check_out').click()
+
+  cy.get('.modal-content').should('be.visible')
+  cy.get('.modal-title').should('be.visible').and('have.text', 'Checkout')
+  cy.get('.text-center').should('contain.text', 'Register / Login account to proceed on checkout.')
+  cy.get('a[href="/login"]').eq(1).click()
+
+
+  cy.get('[data-qa="signup-name"]').type(name)
+    cy.get('[data-qa="signup-email"]').type(email)
+    cy.get('[data-qa="signup-button"]').click()
+    cy.title().should('contain', 'Automation Exercise - Signup')
+    cy.location('pathname').should('eq', '/signup') //verify if the URL's final changed to   /signup
+
+    cy.contains('Enter Account Information').should('be.visible')
+    cy.get('#name').should('have.value', name)
+    cy.get('#email').should('have.value', email)
+
+    cy.get('#id_gender2').check()
+        cy.get('#id_gender2').should('be.checked')
+    cy.get('#id_gender1').check()
+        cy.get('#id_gender1').should('be.checked')
+
+    cy.get('#password').type(password).should('have.value', password).and('have.attr', 'type', 'password') //validates if the password is hidden, not displaying its value
+
+    cy.get('#days').select('20')
+        cy.get('#days').should('have.value', '20')
+    cy.get('#months').select('11')
+        cy.get('#months').should('have.value', '11')
+    cy.get('#years').select('1996')
+        cy.get('#years').should('have.value', '1996')
+
+     
+    cy.get('#newsletter').check().should('be.checked')   
+    cy.get('#optin').check().should('be.checked')
+
+    cy.get('#first_name').type('firstname')
+        .should('have.value', 'firstname')
+    cy.get('#last_name').type('lastname')
+        .should('have.value', 'lastname')
+    cy.get('#company').type('testcompany')
+        .should('have.value', 'testcompany')
+    cy.get('#address1').type('testadress1')
+        .should('have.value', 'testadress1')
+    cy.get('#address2').type('testadress2')
+        .should('have.value', 'testadress2')
+
+    cy.get('#country').select('Canada')
+        .should('have.value', 'Canada')
+    
+    cy.get('#state').type('teststate')
+        .should('have.value', 'teststate')
+    cy.get('#city').type('testcity')
+        .should('have.value', 'testcity')
+    cy.get('#zipcode').type('102030')
+        .should('have.value', '102030')
+    cy.get('#mobile_number').type('40028922')
+        .should('have.value', '40028922')
+
+    cy.get('[data-qa="create-account"]').click()
+    cy.location('pathname').should('eq', '/account_created')
+
+    cy.contains('Account Created!').should('be.visible')
+    cy.contains('Congratulations! Your new account has been successfully created!').should('be.visible')
+    cy.contains('You can now take advantage of member privileges to enhance your online shopping experience with us.').should('be.visible')
+    cy.get('[data-qa="continue-button"]').click()
+    cy.contains(`Logged in as ${name}`).should('be.visible')
+
+    cy.get('a[href="/view_cart"]').first().click()
+    cy.location('pathname').should('eq', '/view_cart')
+    cy.get('.btn.btn-default.check_out').click()
+    cy.location('pathname').should('eq', '/checkout')
+
+    cy.get('.address_address1.address_address2').should('be.visible').should('contain.text', 'testadress1')
+
+    cy.get('.form-control').type('Testing this field rq')
+    cy.contains('Place Order').click()
+    cy.location('pathname').should('eq', '/payment')
+
+    cy.get('[data-qa="name-on-card"]').should('be.visible').type(name)
+    cy.get('[data-qa="card-number"]').should('be.visible').type(onetennumber)
+    cy.get('[data-qa="cvc"]').should('be.visible').and('have.attr', 'placeholder', 'ex. 311').type(onetennumber)
+    cy.get('[data-qa="expiry-month"]').should('be.visible').and('have.attr', 'placeholder', 'MM').type(onetennumber)
+    cy.get('[data-qa="expiry-year"]').should('be.visible').and('have.attr', 'placeholder', 'YYYY').type(onetennumber)
+
+    cy.get('#submit').click()
+
+    cy.contains('Download Invoice').should('have.attr', 'href', '/download_invoice/500')
+
+    cy.get('[data-qa="continue-button"]').click()
+    cy.contains('Delete Account').click()
+    cy.location('pathname').should('eq', '/delete_account') 
+    cy.contains('Account Deleted!').should('be.visible')
+    cy.contains('Your account has been permanently deleted!').should('be.visible')
+    cy.contains('You can create new account to take advantage of member privileges to enhance your online shopping experience with us.').should('be.visible')
+
+    cy.get('[data-qa="continue-button"]').click()
+    cy.title().should('contain', 'Automation Exercise') 
+
+  })
+
+  it('Check Scroll up using ARROW button', () =>{
+
+    cy.scrollTo('bottom')
+    cy.get('footer').should('be.visible')
+    cy.contains('Subscription').should('be.visible')
+    cy.get('#scrollUp').should('be.visible').click()
+    cy.get('header').should('be.visible')
+    cy.contains('Full-Fledged practice website for Automation Engineers').should('be.visible')
+
+  })
+
+  it('Check Scroll up manually', () => {
+
+    cy.scrollTo('bottom')
+    cy.get('footer').should('be.visible')
+    cy.contains('Subscription').should('be.visible')
+    cy.wait(1000) //waiting 1 sec
+    cy.scrollTo('top')
+    cy.get('header').should('be.visible')
+    cy.contains('Full-Fledged practice website for Automation Engineers').should('be.visible')
+
+  })
 
       })
 
